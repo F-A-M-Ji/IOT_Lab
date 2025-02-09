@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+{{>navbar}}
+
+<head>
+  <link rel="shortcut icon" href="#" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
+    name='viewport' />
+  <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+  <link href="../assets/css/light-bootstrap-dashboard.css?v=2.0.0 " rel="stylesheet" />
+  <link href="../assets/css/demo.css" rel="stylesheet" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+  <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+  <style>
+    h1 {
+      color: green;
+    }
+
+    /* toggle in label designing */
+    .toggle {
+      position: relative;
+      display: inline-block;
+      width: 100px;
+      height: 52px;
+      background-color: red;
+      border-radius: 30px;
+      border: 2px solid gray;
+    }
+
+    /* After slide changes */
+    .toggle:after {
+      content: '';
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: gray;
+      top: 1px;
+      left: 1px;
+      transition: all 0.5s;
+    }
+
+    /* Toggle text */
+    p {
+      font-family: Arial, Helvetica, sans-serif;
+      font-weight: bold;
+      font-size: 25px;
+
+    }
+
+    /* Checkbox checked effect */
+    .checkbox:checked+.toggle::after {
+      left: 49px;
+    }
+
+    /* Checkbox checked toggle label bg color */
+    .checkbox:checked+.toggle {
+      background-color: green;
+    }
+
+    /* Checkbox vanished */
+    .checkbox {
+      display: none;
+    }
+
+    .container1 {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .card1 {
+      width: 300px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin: 20px;
+      background-color: #f9f9f9;
+      text-align: center;
+    }
+    
+    .button1 {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+
+<body onload={drawTP(0);drawEC(0);drawPH(0);drawHM(0);drawWP(0);drawN(0);drawP(0);drawK(0)}>
+  <div class="wrapper">
+    <div class="sidebar-wrapper">
+      {{!-- สวิตปั้มน้ำ --}}
+      
+    </div>
+    
+    
+    <div class="main-panel">
+      
+      <div class="content">
+
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card ">
+                <div class="card-header ">
+                  <h4 class="card-title">EC</h4>
+                  <h5 id="ecVal" class="card-title">10.0 us/cm</h4>
+                </div>
+                <div class="card-body">
+                  <canvas id="EC" width="300" height="220" style="border:1px solid #3d3d3"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card ">
+                <div class="card-header ">
+                  <h4 class="card-title"> PH </h4>
+                  <h4 id="phVal" class="card-title">10.0</h4>
+                </div>
+                <div class="card-body">
+                  <canvas id="PH" width="300" height="220" style="border:1px solid #3d3d3"></canvas>
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card ">
+                <div class="card-header ">
+                  <h4 class="card-title">Temperature</h4>
+                  <h4 id="temperatureVal" class="card-title">10.0 C</h4>
+                </div>
+                <div class="card-body">
+                  <canvas id="TP" width="300" height="220" style="border:1px solid #3d3d3"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card ">
+                <div class="card-header ">
+                  <h4 class="card-title">Humidity</h4>
+                  <h4 id="humVal" class="card-title">10.0</h4>
+                </div>
+                <div class="card-body">
+                  <canvas id="HM" width="300" height="220" style="border:1px solid #3d3d3"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header ">
+                  <h4 class="card-title">N</h4>
+
+                  <h4 id="NVal" class="card-title">20 </h4>
+                  {{!-- <div id="NVal"></div> --}}
+                </div>
+                <div class="card-body">
+                  <canvas id="N" width="300" height="220" style="border:1px solid #3d3d3"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header ">
+                  <h4 class="card-title">P</h4>
+
+                  <h4 id="PVal" class="card-title">20 </h4>
+                </div>
+                <div class="card-body">
+                  <canvas id="P" width="300" height="220" style="border:1px solid #3d3d3"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header ">
+                  <h4 class="card-title">K</h4>
+
+
+                  <h4 id="KVal" class="card-title">20 </h4>
+                </div>
+                <div class="card-body">
+                  <canvas id="K" width="300" height="220" style="border:1px solid #3d3d3"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<!--   Core JS Files   -->
+
+
+
+<script type="text/javascript">
+  function drawEC(EC) {
+    var canvas = document.getElementById('EC');
+    document.getElementById('ecVal').innerHTML = EC + " us/cm";
+    if (canvas.getContext) {
+        var ctx = canvas.getContext('2d');
+        var X = canvas.width / 2;
+        var Y = canvas.height / 2;
+        var R = 90; // รัศมีของครึ่งวงกลม
+        var percentage = EC / 100; // เปอร์เซ็นต์ของค่า EC (0-100)
+        var startAngle = -Math.PI / 2; // มุมเริ่มต้นของวงกลม (ตำแหน่ง 12 นาฬิกา)
+        var endAngle = startAngle + (Math.PI * 2 * percentage); // มุมสิ้นสุดของวงกลม
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // เคลียร์ canvas เพื่อวาดใหม่
+
+        if (EC > 0) { // ตรวจสอบว่า EC มากกว่า 0 เพื่อวาดเส้นเฉพาะเมื่อมีค่า EC
+            ctx.beginPath();
+            ctx.arc(X, Y, R, startAngle, endAngle, false); // วาดวงกลม
+            ctx.lineWidth = 30; // ความกว้างของเส้น
+            ctx.strokeStyle = '#FF0000'; // สีของเส้น
+            ctx.stroke();
+        }
+    }
+}
+
+  function drawPH(PH) {
+    var canvas = document.getElementById('PH');
+    document.getElementById('phVal').innerHTML = PH;
+    if (canvas.getContext) {
+        var ctx = canvas.getContext('2d');
+        var X = 50; // ตำแหน่งเริ่มต้นของแท่งแต่ละอัน
+        var maxHeight = canvas.height; // ความสูงสูงสุดของแท่ง (canvas height)
+        var height = PH * (maxHeight / 100); // ความสูงของแท่ง (คำนวณจากค่า PH)
+        var width = 30; // ความกว้างของแท่ง
+        var Y = maxHeight - height; // ตำแหน่ง Y ของแท่ง
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // เคลียร์ canvas เพื่อวาดใหม่
+
+        if (PH > 0) { // ตรวจสอบว่า PH มากกว่า 0 เพื่อวาดแท่งเฉพาะเมื่อมีค่า PH
+            ctx.fillStyle = '#FF0000'; // สีของแท่ง
+            ctx.fillRect(X, Y, width, height); // วาดแท่ง
+        }
+    }
+}
+
+
+function drawTP(temp) {
+    var canvas = document.getElementById('TP');
+    document.getElementById('temperatureVal').innerHTML = temp + " C";
+    if (canvas.getContext) {
+        var ctx = canvas.getContext('2d');
+        var X = canvas.width / 2;
+        var Y = canvas.height / 2;
+        var R = 90; // รัศมีของครึ่งวงกลม
+        var percentage = temp / 100; // เปอร์เซ็นต์ของค่า EC (0-100)
+        var startAngle = -Math.PI / 2; // มุมเริ่มต้นของวงกลม (ตำแหน่ง 12 นาฬิกา)
+        var endAngle = startAngle + (Math.PI * 2 * percentage); // มุมสิ้นสุดของวงกลม
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // เคลียร์ canvas เพื่อวาดใหม่
+
+        if (temp > 0) { // ตรวจสอบว่า EC มากกว่า 0 เพื่อวาดเส้นเฉพาะเมื่อมีค่า EC
+            ctx.beginPath();
+            ctx.arc(X, Y, R, startAngle, endAngle, false); // วาดวงกลม
+            ctx.lineWidth = 30; // ความกว้างของเส้น
+            ctx.strokeStyle = '#FF0000'; // สีของเส้น
+            ctx.stroke();
+        }
+    }
+}
+
+function drawHM(hum) {
+    var canvas = document.getElementById('HM');
+    document.getElementById('humVal').innerHTML = hum;
+    if (canvas.getContext) {
+        var ctx = canvas.getContext('2d');
+        var X = 50; // ตำแหน่งเริ่มต้นของแท่งแต่ละอัน
+        var maxHeight = canvas.height; // ความสูงสูงสุดของแท่ง (canvas height)
+        var height = hum * (maxHeight / 100); // ความสูงของแท่ง (คำนวณจากค่า PH)
+        var width = 30; // ความกว้างของแท่ง
+        var Y = maxHeight - height; // ตำแหน่ง Y ของแท่ง
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // เคลียร์ canvas เพื่อวาดใหม่
+
+        if (hum > 0) { // ตรวจสอบว่า PH มากกว่า 0 เพื่อวาดแท่งเฉพาะเมื่อมีค่า PH
+            ctx.fillStyle = '#FF0000'; // สีของแท่ง
+            ctx.fillRect(X, Y, width, height); // วาดแท่ง
+        }
+    }
+}
+
+  function drawWP(wp) {
+    var canvas = document.getElementById('WP');
+    document.getElementById('waterPumpVal').innerHTML = wp;
+    if (canvas.getContext) {
+      var ctx = canvas.getContext('2d');
+      var X = canvas.width / 2;
+      var Y = canvas.height / 2;
+      ctx.fillStyle = "green";
+      ctx.fillRect(X, Y, 100, wp);
+
+    }
+  };
+
+  function drawN(n) {
+    var canvas = document.getElementById('N');
+    document.getElementById('NVal').innerHTML = n;
+    if (canvas.getContext) {
+        var ctx = canvas.getContext('2d');
+        var X = canvas.width / 2;
+        var Y = canvas.height / 2;
+        var R = 90; // รัศมีของครึ่งวงกลม
+        var percentage = n / 100; // เปอร์เซ็นต์ของค่า EC (0-100)
+        var startAngle = -Math.PI / 2; // มุมเริ่มต้นของวงกลม (ตำแหน่ง 12 นาฬิกา)
+        var endAngle = startAngle + (Math.PI * 2 * percentage); // มุมสิ้นสุดของวงกลม
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // เคลียร์ canvas เพื่อวาดใหม่
+
+        if (n > 0) { // ตรวจสอบว่า EC มากกว่า 0 เพื่อวาดเส้นเฉพาะเมื่อมีค่า EC
+            ctx.beginPath();
+            ctx.arc(X, Y, R, startAngle, endAngle, false); // วาดวงกลม
+            ctx.lineWidth = 30; // ความกว้างของเส้น
+            ctx.strokeStyle = '#FF0000'; // สีของเส้น
+            ctx.stroke();
+        }
+    }
+}
+
+function drawP(p) {
+    var canvas = document.getElementById('P');
+    document.getElementById('PVal').innerHTML = p;
+    if (canvas.getContext) {
+        var ctx = canvas.getContext('2d');
+        var X = 50; // ตำแหน่งเริ่มต้นของแท่งแต่ละอัน
+        var maxHeight = canvas.height; // ความสูงสูงสุดของแท่ง (canvas height)
+        var height = p * (maxHeight / 100); // ความสูงของแท่ง (คำนวณจากค่า PH)
+        var width = 30; // ความกว้างของแท่ง
+        var Y = maxHeight - height; // ตำแหน่ง Y ของแท่ง
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // เคลียร์ canvas เพื่อวาดใหม่
+
+        if (p > 0) { // ตรวจสอบว่า PH มากกว่า 0 เพื่อวาดแท่งเฉพาะเมื่อมีค่า PH
+            ctx.fillStyle = '#FF0000'; // สีของแท่ง
+            ctx.fillRect(X, Y, width, height); // วาดแท่ง
+        }
+    }
+}
+
+function drawK(k) {
+    var canvas = document.getElementById('K');
+    document.getElementById('KVal').innerHTML = k;
+    if (canvas.getContext) {
+        var ctx = canvas.getContext('2d');
+        var X = canvas.width / 2;
+        var Y = canvas.height / 2;
+        var R = 90; // รัศมีของครึ่งวงกลม
+        var percentage = k / 100; // เปอร์เซ็นต์ของค่า EC (0-100)
+        var startAngle = -Math.PI / 2; // มุมเริ่มต้นของวงกลม (ตำแหน่ง 12 นาฬิกา)
+        var endAngle = startAngle + (Math.PI * 2 * percentage); // มุมสิ้นสุดของวงกลม
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // เคลียร์ canvas เพื่อวาดใหม่
+
+        if (k > 0) { // ตรวจสอบว่า EC มากกว่า 0 เพื่อวาดเส้นเฉพาะเมื่อมีค่า EC
+            ctx.beginPath();
+            ctx.arc(X, Y, R, startAngle, endAngle, false); // วาดวงกลม
+            ctx.lineWidth = 30; // ความกว้างของเส้น
+            ctx.strokeStyle = '#FF0000'; // สีของเส้น
+            ctx.stroke();
+        }
+    }
+}
+
+  // Create WebSocket connection.
+  console.log("tetststs");
+  const socket = new WebSocket('ws://192.168.1.39:3001');
+  //สิ่งที่ต้องเปลี่ยนตอนเปลี่ยนเครื่อง
+  socket.addEventListener('open', function (event) {
+    //alert("XXXXXXXXXXXX");
+    console.log('Connected to WS Server')
+  });
+
+
+
+  var temp = '';
+  var ph = '';
+  var ec = '';
+  var hum = '';
+  var wp = '';
+  var N = '';
+  var P = '';
+  var K = '';
+
+  socket.addEventListener('message', function (event) {
+    obj = JSON.parse(event.data);
+    console.log('Message from server ', event.data);
+    obj.forEach(st => {
+      console.log('Message from server ', st.temperature);
+      console.log('Message from server ', st.humidity);
+      console.log('Message from server ', st.ec);
+      console.log('Message from server ', st.ph);
+      console.log('Message from server ', st.wp);
+      console.log('Message from server ', st.N);
+      console.log('Message from server ', st.P);
+      console.log('Message from server ', st.K);
+
+
+      drawEC(st.ec);
+      drawPH(st.ph);
+      drawTP(st.temperature);
+      drawHM(st.humidity);
+      drawWP(st.wp);
+      drawN(st.N);
+      drawP(st.P);
+      drawK(st.K);
+
+      temp = st.temperature;
+      ph = st.humidity;
+      ec = st.ec;
+      hum = st.humidity;
+      wp = st.wp;
+      N = st.N;
+      P = st.P;
+      K = st.K;
+
+    });
+  });
+
+
+  function GetMonitorSize() {
+    var x = "Total Width: " + screen.width + "px" + "Total Height: " + screen.height;
+    //<!--canvas id="wifi" width="600" height="220" style="border:1px solid #3d3d3"></canvas-->
+    document.getElementById("ttt").innerHTML = "<canvas id=\"wifi\" width=\"600\" height=\"220\" style=\"border:1px solid #3d3d3\"></canvas>";
+    // var width = document.getElementById("width");
+    //var height = document.getElementById("height");
+    //width.value = screen.width;
+    //height.value=screen.height;
+  }
+
+
+
+
+</script>
+
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+  {{>navbar}}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+    <link href="../assets/css/light-bootstrap-dashboard.css?v=2.0.0 " rel="stylesheet" />
+    <link href="../assets/css/demo.css" rel="stylesheet" />
+    <link href="../assets/css/new_dec.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <title>Setting</title>
+<style>
+    body {
+      background-color: #f8f9fa; /* ตั้งค่าสีพื้นหลังของหน้าเว็บ */
+      font-size: 16px; /* ตั้งค่าขนาดตัวอักษร */
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="main-panel">
+      <div class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card ">
+                <div class="card-header ">
+                  <h4 class="card-title">Input Water Pump</h4>
+                  <br>
+                  <input class="input" type="text" id="input_wp" name="myInput">
+                  <div class="ww">
+                    <button class="button-4" type="submit" value="Submit" id="sw_wp">Submit</button>
+                  </div>
+
+                </div>
+                <div class="card-body">
+                  <canvas width="300" height="70" style="border:1px solid #3d3d3"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card ">
+                <div class="card-header ">
+                  <h4 class="card-title">Input Fertilizer</h4>
+                  <br>
+                  <input class="input" type="text" id="input_ft" name="input_ft">
+                  <div class="ww">
+                    <button class="button-4" type="submit" value="Submit" id="sw_ft">Submit</button>
+                  </div>
+
+                </div>
+                <div class="card-body">
+                  <canvas width="300" height="70" style="border:1px solid #3d3d3"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card ">
+                <div class="card-header ">
+                  <h4 class="card-title">Input Medicine</h4>
+                  <br>
+                  <input class="input" type="text" id="input_md" name="input_md">
+                  <div class="ww">
+                    <button class="button-4" type="submit" value="Submit" id="sw_md">Submit</button>
+                  </div>
+
+                </div>
+                <div class="card-body">
+                  <canvas width="300" height="70" style="border:1px solid #3d3d3"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+<script type="text/javascript" >
+    console.log("tetststs");
+    //สิ่งที่ต้องเปลี่ยนตอนเปลี่ยนเครื่อง
+    const socket = new WebSocket('ws://192.168.1.39:3001');
+    
+    socket.addEventListener('open', function (event) {
+      //alert("XXXXXXXXXXXX");
+      console.log('Connected to WS Server')
+    });
+
+    var temp = '';
+    var ph = '';
+    var ec = '';
+    var hum = '';
+    var fert = '';
+    var wp = '';
+    var med = '';
+    //var device = '';
+
+    var pumpsw = 'off';
+    var puisw = 'off';
+    var medsw = 'off';
+
+    var N = '';
+    var P = '';
+    var K = '';
+
+    var sw = '';
+    var dv = '';
+
+    socket.addEventListener('message', function (event) {
+      obj = JSON.parse(event.data);
+      console.log('Message from server ', event.data);
+      obj.forEach(st => {
+        console.log('Message from server ', st.temperature);
+        console.log('Message from server ', st.humidity);
+        console.log('Message from server ', st.ec);
+        console.log('Message from server ', st.ph);
+        console.log('Message from server ', st.wp);
+        console.log('Message from server ', st.fert);
+        console.log('Message from server ', st.med);
+        console.log('Message from server ', st.N);
+        console.log('Message from server ', st.P);
+        console.log('Message from server ', st.K);
+        console.log('Message from server ', st.device);
+        console.log('Message from server ', st.switchs);
+        
+        temp = st.temperature;
+        ph = st.humidity;
+        ec = st.ec;
+        hum = st.humidity;
+        wp = st.wp;
+        fert = st.fert;
+        med =st.med;
+        N = st.N;
+        P = st.P;
+        K = st.K;
+        sw = st.switchs;
+        dv =st.device;
+
+      });
+    });
+
+
+    $('#sw_wp').click(function(){
+      var wpVal = document.getElementById("input_wp").value;
+      if(wpVal == ""){
+        alert("Please Insert Value!");
+      }else{
+        
+        if (pumpsw == 'off') {
+          alert("On");
+          pumpsw = 'on';
+          $.ajax({
+            url: 'ajax_pumpsw',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ temperature: temp, humidity: hum, ec: ec, ph: ph, wp: wpVal,fert:fert,med:med, N: N, P: P, K: K, pumpsw: pumpsw }),
+            success: function (response) {
+              //alert("ww");
+              console.log(response);
+              
+              wpVal = "";
+              document.getElementById("input_wp").disabled = true;
+            },
+            error: function (xhr, status, error) {
+              console.error('Error:', error);
+            }
+          });
+          } else {
+            pumpsw = 'off';
+            alert("Off");
+            $.ajax({
+              url: 'ajax_pumpsw',
+              type: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify({ temperature: temp, humidity: hum, ec: ec, ph: ph,  wp: wpVal,fert:fert,med:med, N: N, P: P, K: K, pumpsw: pumpsw }),
+              success: function (response) {
+                //alert("ww");
+                console.log(response);
+              },
+              error: function (xhr, status, error) {
+                console.error('Error:', error);
+              }
+            });
+            
+            
+            document.getElementById("input_wp").disabled = false;
+            
+          }
+      }
+      //console.log(obj);
+      
+      
+    });
+
+    $('#sw_ft').click(function(){
+      var fertVal = document.getElementById("input_ft").value;
+      //console.log(obj);
+      if(fertVal == ""){
+        alert("Please Insert Value!");
+      }else{
+        if (puisw == 'off') {
+          puisw = 'on';
+          alert("On");
+          $.ajax({
+            url: 'ajax_puisw',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ temperature: temp, humidity: hum, ec: ec, ph: ph,  wp: wp,fert:fertVal,med:med, N: N, P: P, K: K, puisw: puisw }),
+            success: function (response) {
+              //alert("ww");
+              console.log(response);
+            },
+            error: function (xhr, status, error) {
+              console.error('Error:', error);
+            }
+          });
+          
+          document.getElementById("input_ft").disabled = true;
+          } else {
+            puisw = 'off';
+            alert("Off");
+            $.ajax({
+              url: 'ajax_puisw',
+              type: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify({ temperature: temp, humidity: hum, ec: ec, ph: ph,  wp: wp,fert:fertVal,med:med, N: N, P: P, K: K, puisw: puisw }),
+              success: function (response) {
+                //alert("ww");
+                console.log(response);
+              },
+              error: function (xhr, status, error) {
+                console.error('Error:', error);
+              }
+            });
+            
+            document.getElementById("input_ft").disabled = false;
+          }
+      
+      }
+      
+    });
+
+    $('#sw_md').click(function(){
+      var medVal = document.getElementById("input_md").value;
+      //console.log(obj);
+      if(medVal==""){
+        alert("Please Insert Value!");
+      }else{
+        if (medsw == 'off') {
+          medsw = 'on';
+          alert("On");
+          $.ajax({
+            url: 'ajax_medsw',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ temperature: temp, humidity: hum, ec: ec, ph: ph, wp: wp,fert:fert,med:medVal, N: N, P: P, K: K, medsw: medsw }),
+            success: function (response) {
+              //alert("ww");
+              console.log(response);
+            },
+            error: function (xhr, status, error) {
+              console.error('Error:', error);
+            }
+          });
+          
+          document.getElementById("input_md").disabled = true;
+          } else {
+            medsw = 'off';
+            alert("Off");
+            $.ajax({
+              url: 'ajax_medsw',
+              type: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify({ temperature: temp, humidity: hum, ec: ec, ph: ph,wp: wp,fert:fert,med:medVal, N: N, P: P, K: K, medsw: medsw }),
+              success: function (response) {
+                //alert("ww");
+                console.log(response);
+              },
+              error: function (xhr, status, error) {
+                console.error('Error:', error);
+              }
+            });
+            document.getElementById("input_md").disabled = false;
+          }
+          
+      }
+      
+    });
+
+</script>

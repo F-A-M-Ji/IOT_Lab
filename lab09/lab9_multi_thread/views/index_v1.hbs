@@ -1,0 +1,82 @@
+<html lang="en">
+  <h1>{{title}}</h1>
+  <p>IoT {{title}}</p>
+<head>
+    <meta charset="utf-8" />
+    <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
+    <link rel="icon" type="image/png" href="../assets/img/favicon.ico">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>Light Bootstrap Dashboard - Free Bootstrap 4 Admin Dashboard by Creative Tim</title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+    <!--     Fonts and icons     -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+    <!-- CSS Files -->
+    <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../assets/css/light-bootstrap-dashboard.css?v=2.0.0 " rel="stylesheet" />
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link href="../assets/css/demo.css" rel="stylesheet" />
+
+    <script> 
+      $(document).ready(function() {
+          $('#example').DataTable();
+      });
+    </script>
+  </head>
+  <body>
+    <form method="POST" action="/sendname" enctype="text/html">
+      <label for="name">First name:</label><br>
+      <input type="text" id="name" name="name" value="John"><br>
+      <label for="surname">Last name:</label><br>
+      <input type="text" id="surname" name="surname" value="Doe"><br><br>
+      <input type="submit" value="Submit">
+    </form>
+
+    <form method="POST" action="/setled" enctype="text/html">
+      <label for="led">Status:</label><br>
+      <input type="text" id="led" name="led" value="OFF"><br>
+      <input type="submit" value="Submit">
+    </form>
+
+    <a href="/getwaterlevel">Get Status</a> 
+    <script type="text/javascript">
+      //const socket = new WebSocket('ws://10.0.2.4:3001');
+      //  const socket = new WebSocket('wss://10.0.2.4:3000');
+      const socket = new WebSocket('wss://10.0.2.15:3000');
+      socket.addEventListener('open', function (event) {
+          //alert("XXXXXXXXXXXX");
+          console.log('Connected to WS Server')
+      });
+      socket.addEventListener('message', function (event) {
+          var obj = JSON.parse(event.data);
+          console.log('Message from server ', event.data);
+            obj.forEach(st => {
+              console.log('Message from server ', st.id);
+            });
+      });
+      function draw1()
+        {
+          var canvas = document.getElementById('wifi1');
+          if (canvas.getContext)
+          {
+              var ctx = canvas.getContext('2d'); 
+              var X = canvas.width / 2;
+              var Y = canvas.height / 2;
+              var R = 95;
+              ctx.showInLegend= true;
+          ctx.beginPath();
+              ctx.arc(X, Y, R, 0, 2 * Math.PI, false);
+              ctx.lineWidth = 3;
+              ctx.strokeStyle = '#FF0000';
+              ctx.stroke();
+              ctx.beginPath();
+              var R1 = 30;
+              ctx.arc(X, Y, R1, 0, 2 * Math.PI, false);
+              ctx.lineWidth = 3;
+              ctx.strokeStyle = '#FF0000';
+              ctx.stroke();
+          }
+        }
+    </script>
+  </body>
+</html>

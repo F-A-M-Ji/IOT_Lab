@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+{{>navbar}}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+    <link href="../assets/css/light-bootstrap-dashboard.css?v=2.0.0 " rel="stylesheet" />
+    <link href="../assets/css/demo.css" rel="stylesheet" />
+    <link href="../assets/css/new_dec.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.dataTables.css" />
+    <script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
+
+    <title>Tracking</title>
+
+    
+</head>
+<body>
+    <div class="wrapper">
+        <div class="main-panel">
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="card" style="overflow-y:auto;">
+
+                        <table id="dataTable" name="dataTable tbody" class="display" cellspacing="0">
+                            <!--ส่วนหัว-->
+                            <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>อุณภูมิ</th>
+                                        <th>ความชื้น</th>
+                                        <th>EC</th>
+                                        <th>PH</th>
+                                        <th>ปั้มน้ำ</th>
+                                        <th>ปุ๋ย</th>
+                                        <th>ยาฆ่าแมลง</th>
+                                        <th>ชื่ออุปกรณ์</th>
+                                        <th>การกระทำ</th>  
+                                        <th>เวลา</th>  
+                                    </tr>
+                            </thead>
+
+                        <!-- ส่วนท้าย -->   
+                            <tfoot>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>อุณภูมิ</th>
+                                        <th>ความชื้น</th>
+                                        <th>EC</th>
+                                        <th>PH</th>
+                                        <th>ปั้มน้ำ</th>
+                                        <th>ปุ๋ย</th>
+                                        <th>ยาฆ่าแมลง</th>
+                                        <th>ชื่ออุปกรณ์</th>
+                                        <th>การกระทำ</th>  
+                                        <th>เวลา</th>         
+                                    </tr>
+                            </tfoot>
+                        <!--ส่วนเนื้อหา -->
+                            <tbody>
+                                 {{#each log}}           
+                                    <tr align="center">
+                                    <td>
+                                        {{this.device}}
+                                    </td>
+                                    <td>
+                                        {{this.status}}
+                                    </td>
+                                    <td>
+                                        {{this.time}}
+                                    </td>
+                                    
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                        
+                            </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+<script>
+    $(document).ready(function() {
+        //ต้องโชว์ status ปั้มน้ำ ปุ๋ย ยา
+        
+        $.ajax({
+            url: '/fetch_data', // ส่งคำร้องขอไปยัง API ของคุณที่จะดึงข้อมูล MongoDB
+            method: 'GET',
+            success: function(data) {
+                //alert("q");
+                // เมื่อข้อมูลถูกดึงมาสำเร็จ
+                var temp = '';
+                var hum = '';
+                var ec = '';
+                var ph = '';
+                var wp = '';
+                var tableBody = $('#dataTable tbody');
+                data.forEach(function(item) {
+                    temp = item.temperature;
+                    hum = item.humidity;
+                    ec = item.ec;
+                    ph = item.ph ;
+                    wp = item.wp;
+                    var row = $('<tr>');
+                    row.append('<td>' + item._id + '</td>');
+                    row.append('<td>' + item.temperature + '</td>');
+                    row.append('<td>' + item.humidity + '</td>');
+                    row.append('<td>' + item.ec + '</td>');
+                    row.append('<td>' + item.ph + '</td>');
+                    row.append('<td>' + item.wp + '</td>');
+                    row.append('<td>' + item.fert + '</td>');
+                    row.append('<td>' + item.med + '</td>');
+                    row.append('<td>' + item.device + '</td>');
+                    row.append('<td>' + item.switchs + '</td>');
+                    row.append('<td>' + item.time + '</td>');
+                    tableBody.append(row);
+                });
+
+
+                var empDataTable = $('#dataTable').DataTable();
+        
+            },
+            error: function(error) {
+                // หากเกิดข้อผิดพลาดในการดึงข้อมูล
+                console.error('Error fetching data:', error);
+            }
+        });
+
+        
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<meta http-equiv="refresh" content="10"/>
+
+<head>
+  <link rel="stylesheet" type="text/css" href="../assets/js/core/jquery.dataTables.min.css">
+
+  <script type="text/javascript" language="javascript" src="../assets/js/core/jquery-1.12.0.min.js"></script>
+  <script type="text/javascript" src="../assets/js/core/jquery.dataTables.min.js">
+  </script>
+  <title></title>
+  <script> 
+    $(document).ready(function() {
+        $('#example').DataTable();
+    });
+  </script>
+</head>
+{{>navbar}}
+<body>
+ <header>
+<br> </br>   
+<br> </br>  
+<div class="card">
+
+
+<table id="example" class="display" cellspacing="0">
+    <!--ส่วนหัว-->
+    <thead>
+            <tr>
+                <th>ชื่ออุปกรณ์</th>
+                <th>การกระทำ</th>  
+                <th>เวลา</th>  
+                           
+            </tr>
+    </thead>
+
+ <!-- ส่วนท้าย -->   
+    <tfoot>
+            <tr>
+                <th>ชื่ออุปกรณ์</th>
+                <th>การกระทำ</th>
+                <th>เวลา</th>         
+            </tr>
+    </tfoot>
+ <!--ส่วนเนื้อหา -->
+    <tbody>
+              
+          {{#each log}}           
+            <tr align="center">
+              <td>
+                {{this.device}}
+              </td>
+              <td>
+                {{this.status}}
+              </td>
+              <td>
+                {{this.time}}
+              </td>
+             
+            </tr>
+          {{/each}}
+      </tbody>
+ 
+    </table>
+
+</div>
+</header>
+</body>
+</html>
